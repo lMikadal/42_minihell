@@ -36,9 +36,11 @@ typedef struct s_data
 	char	*user;
 }	t_data;
 
+void	ft_lexer(char *s);
 char	**ft_split(char const *s, char c);
 int		ft_strlen(char const *s);
 char	*ft_strcpy_add(char const *s1, char const *s2);
+char	**ft_split_cmd(char *s);
 void	ft_free_all(t_data *data);
 void	ft_free_2d(char **s);
 

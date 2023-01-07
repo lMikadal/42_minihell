@@ -1,18 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmikada <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/19 16:11:20 by pmikada           #+#    #+#             */
-/*   Updated: 2022/12/19 16:11:34 by pmikada          ###   ########.fr       */
+/*   Created: 2023/01/07 20:09:29 by pmikada           #+#    #+#             */
+/*   Updated: 2023/01/07 20:09:30 by pmikada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_count_word(char const *s, char c)
+static int	ft_loop_word(char const *s, int i, char const c)
+{
+	while (s[++i])
+	{
+		if (s[i] == c)
+			return (i);
+	}
+	return (i);
+}
+
+static int	ft_count_word2(char const *s)
 {
 	int	i;
 	int	word;
@@ -21,13 +31,19 @@ static int	ft_count_word(char const *s, char c)
 	word = 0;
 	while (s[++i])
 	{
-		if (s[i] != c && (i == 0 || s[i - 1] == c))
+		if (s[i] == 34 || s[i] == 39)
+		{
+			if (i == 0)
+				word++;
+			i = ft_loop_word(s, i, s[i]);
+		}
+		if (s[i] != '|' && (i == 0 || s[i - 1] == '|'))
 			word++;
 	}
 	return (word);
 }
 
-static char	*ft_loc_str(char const *s, int start, int end)
+static char	*ft_loc_str2(char const *s, int start, int end)
 {
 	char	*str;
 	int		i;
@@ -42,7 +58,7 @@ static char	*ft_loc_str(char const *s, int start, int end)
 	return (str);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split_cmd(char *s)
 {
 	char	**re;
 	int		i;
@@ -50,7 +66,7 @@ char	**ft_split(char const *s, char c)
 	int		start;
 	int		len_s;
 
-	re = (char **)malloc((ft_count_word(s, c) + 1) * sizeof(char *));
+	re = (char **)malloc((ft_count_word2(s) + 1) * sizeof(char *));
 	if (re == NULL)
 		return (0);
 	i = -1;
@@ -58,46 +74,13 @@ char	**ft_split(char const *s, char c)
 	len_s = ft_strlen(s);
 	while (++i <= len_s)
 	{
-		if (s[i] != c && (i == 0 || s[i - 1] == c))
+		if (s[i] == 34 || s[i] == 39)
+			i = ft_loop_word(s, i, s[i]);
+		if (s[i] != '|' && (i == 0 || s[i - 1] == '|'))
 			start = i;
-		if (i != 0 && s[i - 1] != c && (s[i] == c || s[i] == '\0'))
-			re[word++] = ft_loc_str(s, start, i);
+		if (i != 0 && s[i - 1] != '|' && (s[i] == '|' || s[i] == '\0'))
+			re[word++] = ft_loc_str2(s, start, i);
 	}
 	re[word] = 0;
-	return (re);
-}
-
-int	ft_strlen(char const *s)
-{
-	int	i;
-	int	len;
-
-	i = -1;
-	len = 0;
-	while (s[++i])
-		len += 1;
-	return (len);
-}
-
-char	*ft_strcpy_add(char const *s1, char const *s2)
-{
-	char	*re;
-	int		len_s1;
-	int		len_s2;
-	int		i;
-	int		j;
-
-	len_s1 = ft_strlen(s1);
-	len_s2 = ft_strlen(s2);
-	re = (char *)malloc((len_s1 + len_s2 + 1) * sizeof(char));
-	if (re == NULL)
-		return (0);
-	j = 0;
-	i = -1;
-	while (++i < len_s1)
-		re[j++] = s1[i];
-	i = -1;
-	while (++i < len_s2)
-		re[j++] = s2[i];
 	return (re);
 }

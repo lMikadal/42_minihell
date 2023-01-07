@@ -60,10 +60,15 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 	ft_set_path(&data, env);
 	ft_set_user(&data, env);
+
+	// char *arg[] = {"ls", NULL};
+	// char *envp[] = {NULL};
+	// execve("/bin/ls", arg, envp);
+
 	while (1)
 	{
 		cmd = readline(data.user);
-		printf("complie %s\n", cmd);
+		ft_lexer(cmd);
 		if (ft_check_word(cmd, EXIT))
 		{
 			ft_free_all(&data);

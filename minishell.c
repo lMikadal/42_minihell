@@ -11,3 +11,14 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_lexer(char *s)
+{
+	char	**cmd;
+
+	cmd = ft_split_cmd(s);
+	int	i = -1;
+	while (cmd[++i])
+		printf("cmd[%d] %s\n", i, cmd[i]);
+	ft_free_2d(cmd);
+}

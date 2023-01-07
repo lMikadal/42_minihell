@@ -12,7 +12,7 @@
 
 NAME = minishell
 
-SRCS = minishell.c utils.c utils_free.c
+SRCS = minishell.c utils.c utils2.c utils_free.c
 
 MAIN = main.c
 
