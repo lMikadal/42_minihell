@@ -26,4 +26,20 @@
 # include <sys/ioctl.h>
 # include <term.h>
 
+# define PATH "PATH="
+# define USER "USER="
+# define EXIT "exit"
+
+typedef struct s_data
+{
+	char	**path;
+	char	*user;
+}	t_data;
+
+char	**ft_split(char const *s, char c);
+int		ft_strlen(char const *s);
+char	*ft_strcpy_add(char const *s1, char const *s2);
+void	ft_free_all(t_data *data);
+void	ft_free_2d(char **s);
+
 #endif
