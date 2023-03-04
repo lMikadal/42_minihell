@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmikada <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/19 13:19:47 by pmikada           #+#    #+#             */
-/*   Updated: 2022/12/19 13:26:15 by pmikada          ###   ########.fr       */
+/*   Created: 2022/06/07 20:25:05 by pmikada           #+#    #+#             */
+/*   Updated: 2022/06/07 20:30:08 by pmikada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	ft_lexer(char *s)
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	char	**cmd;
+	size_t	i;
 
-	cmd = ft_split_cmd(s);
-	int	i = -1;
-	while (cmd[++i])
-		printf("cmd[%d] %s\n", i, cmd[i]);
-	ft_free_2d(cmd);
+	i = 0;
+	while (i < n)
+	{
+		if (((char *)s1)[i] != ((char *)s2)[i])
+			return (((unsigned char *)s1)[i] - ((unsigned char *)s2)[i]);
+		i++;
+	}
+	return (0);
 }

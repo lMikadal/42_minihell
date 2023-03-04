@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_free.c                                       :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmikada <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/07 13:01:32 by pmikada           #+#    #+#             */
-/*   Updated: 2023/01/07 13:01:34 by pmikada          ###   ########.fr       */
+/*   Created: 2022/06/04 21:10:08 by pmikada           #+#    #+#             */
+/*   Updated: 2022/06/17 23:57:39 by pmikada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	ft_free_all(t_data *data)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	ft_free_2d(data->path);
-	free(data->user);
-}
+	unsigned char	*d;
+	unsigned char	*s;
 
-void	ft_free_2d(char **s)
-{
-	int	i;
-
-	i = -1;
-	while (s[++i])
-		free(s[i]);
-	free(s);
+	d = (unsigned char *)dst;
+	s = (unsigned char *)src;
+	if (d == 0 && s == 0)
+		return (0);
+	if (d < s)
+		return (ft_memcpy(dst, src, len));
+	else
+	{
+		d = d + (len - 1);
+		s = s + (len - 1);
+		while (len-- > 0)
+			*d-- = *s--;
+	}
+	return (dst);
 }

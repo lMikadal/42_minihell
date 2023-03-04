@@ -3,78 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmikada <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: rchiewli <rchiewli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/19 13:19:37 by pmikada           #+#    #+#             */
-/*   Updated: 2022/12/19 13:25:59 by pmikada          ###   ########.fr       */
+/*   Created: 2023/01/14 10:11:33 by pmikada           #+#    #+#             */
+/*   Updated: 2023/02/25 02:42:18 by rchiewli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_check_word(char *str, char *word)
+t_shell	*ft_shellini(t_shell *shell)
 {
-	int	i;
-	int	len_w;
-
-	i = -1;
-	len_w = ft_strlen(word);
-	while (++i < len_w)
-	{
-		if (str[i] != word[i])
-			return (0);
-	}
-	return (1);
-}
-
-static void	ft_set_path(t_data *data, char **env)
-{
-	int	i;
-
-	i = -1;
-	while (env[++i])
-	{
-		if (ft_check_word(env[i], PATH))
-			data->path = ft_split(&env[i][5], ':');
-	}
-}
-
-static void	ft_set_user(t_data *data, char **env)
-{
-	int	i;
-
-	i = -1;
-	while (env[++i])
-	{
-		if (ft_check_word(env[i], USER))
-			data->user = ft_strcpy_add(&env[i][5], "> ");
-	}
+	shell->decor = malloc(sizeof(t_decor));
+	shell->exp = NULL;
+	shell->par = NULL;
+	shell->tcmd = NULL;
+	return (shell);
 }
 
 int	main(int ac, char **av, char **env)
 {
-	t_data	data;
-	char	*cmd;
+	t_shell	*shell;
 
-	(void)ac;
-	(void)av;
-	ft_set_path(&data, env);
-	ft_set_user(&data, env);
-
-	// char *arg[] = {"ls", NULL};
-	// char *envp[] = {NULL};
-	// execve("/bin/ls", arg, envp);
-
-	while (1)
-	{
-		cmd = readline(data.user);
-		ft_lexer(cmd);
-		if (ft_check_word(cmd, EXIT))
-		{
-			ft_free_all(&data);
-			exit (0);
-		}
-	}
-	ft_free_all(&data);
+	rl_catch_signals = 0;
+	shell = malloc(sizeof(t_shell));
+	shell = ft_shellini(shell);
+	ft_promptpare(ac, av, shell);
+	shell->decor->fullpmt = ft_strjoin(shell->decor->pmptclr, \
+								shell->decor->pmptstr);
+	shell->decor->pmptfull = ft_strjoinfree(shell->decor->fullpmt, \
+								shell->decor->inpclr);
+	ft_signals();
+	ft_submain(shell, env);
+	free (shell->decor->pmptfull);
+	free(shell->decor);
+	free(shell->lex);
+	free(shell);
+	rl_clear_history();
 	return (0);
 }
